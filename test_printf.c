@@ -1,0 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   test_printf.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sohan <sohan@student.42seoul.kr>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 17:13:35 by sohan             #+#    #+#             */
+/*   Updated: 2021/06/29 17:13:37 by sohan            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdio.h>
+#include <stdarg.h>
+
+int	main(int argc, char **argv)
+{
+	int	arr[6] = {1234, 3, 1, 123, 12, 1};
+	int	flags;
+
+	flags = 0b0011;
+	printf("%d\n", flags << 4);
+	printf("%015d\n", 1234);
+	printf("%0*d\n", 5, arr[1]);
+	printf("%5d\n", arr[2]);
+	printf("%.5d\n", arr[3]);
+	printf("%-*.0d\n", 10, arr[4]);
+	printf("%-.5d\n", arr[5]);
+	printf("%#10.5X\n", 42);
+	printf("%10x\n", 123);
+	printf("%010x\n", 123);
+	int result = printf("%-10x\n", 123);
+	printf("-*.*abc%+-*.*defg*.*%#-10.5xhi%+-7.5%\n", 7, 5, 123, 42);
+	printf("%100p\n", "123");
+	printf("%-100p\n", "123");
+	printf("%d\n", result);
+	return (0);
+}
