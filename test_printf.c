@@ -1,5 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   test_printf.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -27,12 +25,10 @@ int	main(int argc, char **argv)
 	printf("%-*.0d\n", 10, arr[4]);
 	printf("%-.5d\n", arr[5]);
 	printf("%#10.5X\n", 42);
-	printf("%10x\n", 123);
-	printf("%010x\n", 123);
-	int result = printf("%-10x\n", 123);
+	printf("%s\n", "asdfg");
+	printf("%*.*d\n", 7, 5, 123);
+	printf("%*.*x\n", 7, 5, 123);
+	printf("%*.*u\n", 7, 5, 123);
 	printf("-*.*abc%+-*.*defg*.*%#-10.5xhi%+-7.5%\n", 7, 5, 123, 42);
-	printf("%100p\n", "123");
-	printf("%-100p\n", "123");
-	printf("%d\n", result);
 	return (0);
 }

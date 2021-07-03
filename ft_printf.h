@@ -19,10 +19,11 @@
 
 enum	e_flags
 {
-	zero = 1 << 11,
-	minus = 1 << 10,
-	precision = 1 << 9,
-	asterisk = 1 << 8,
+	zero = 1 << 12,
+	minus = 1 << 11,
+	precision = 1 << 10,
+	asterisk1 = 1 << 9,
+	asterisk2 = 1 << 8,
 	character = 1 << 7,
 	string = 1 << 6,
 	pointer = 1 << 5,
@@ -43,7 +44,6 @@ typedef	struct s_component
 	char	*str;
 	int		_int;
 	int		flag;
-	va_list	ptr;
 }				t_component;
 
 #endif
