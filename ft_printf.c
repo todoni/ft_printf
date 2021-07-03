@@ -17,18 +17,10 @@ void	print_padding(int width_padding)
 
 int	ft_printf(const char *fmt, ...)
 {
-	va_list	arg_ptr;
-	int		flag;
-	int		len_printed;
-	int		width_space;
-	int		width_total;
-	int		width_padding;
-	char	*str;
-	char	_char;
-	int		_int;
-	
-	flag = 0;
-	va_start(arg_ptr, fmt);
+	t_component	arg;
+
+	arg.flag = 0;
+	va_start(arg.ptr, fmt);
 	while (*fmt)
 	{
 		while (*fmt != '%' && *fmt)
@@ -39,163 +31,164 @@ int	ft_printf(const char *fmt, ...)
 		if (*fmt)
 			fmt++;
 		if (*fmt == '0')
-			flag |= zero;
+			arg.flag |= zero;
 		else if (*fmt == '-')
-			flag |= minus;
-		if ((flag & zero) || (flag & minus))
+			arg.flag |= minus;
+		if ((arg.flag & zero) || (arg.flag & minus))
 			fmt++;
-		width_total = ft_atoi(fmt);
+		arg.width_total = ft_atoi(fmt);
 		while (ft_isdigit(*fmt))
 			fmt++;
 		if (*fmt == '.')
 		{
-			flag |= precision;
+			arg.flag |= precision;
 			fmt++;
 		}
+		arg.width_prec = ft_atoi(fmt);
 		while (ft_isdigit(*fmt))
 			fmt++;
 		if (*fmt == 'c')
-			flag |= character;
+			arg.flag |= character;
 		else if (*fmt == 's')
-			flag |= string;
+			arg.flag |= string;
 		else if (*fmt == 'p')
-			flag |= pointer;
+			arg.flag |= pointer;
 		else if (*fmt == 'd')
-			flag |= integer;
+			arg.flag |= integer;
 		else if (*fmt == 'i')
-			flag |= integer;
+			arg.flag |= integer;
 		else if (*fmt == 'u')
-			flag |= u_integer;
+			arg.flag |= u_integer;
 		else if (*fmt == 'x')
-			flag |= hex_low;
+			arg.flag |= hex_low;
 		else if (*fmt == 'X')
-			flag |= hex_up;
+			arg.flag |= hex_up;
 		else if (*fmt == '%')
-			flag |= percent;
+			arg.flag |= percent;
 		fmt++;
-		if (flag & character)
+		if (arg.flag & character)
 		{
-			_int = va_arg(arg_ptr, int);
-			width_space = width_total - 1;
-			if (flag & minus)
+			arg._int = va_arg(arg.ptr, int);
+			arg.width_space = arg.width_total - 1;
+			if (arg.flag & minus)
 			{
-				write(1, &_int, 1);
-				print_space(width_space);
+				write(1, &arg._int, 1);
+				print_space(arg.width_space);
 			}
 			else
 			{
-				print_space(width_space);
-				write(1, &_int, 1);
+				print_space(arg.width_space);
+				write(1, &arg._int, 1);
 			}
 		}
-		if ((flag & integer) || (flag & u_integer))
+		if ((arg.flag & integer) || (arg.flag & u_integer))
 		{
-			_int = va_arg(arg_ptr, int);
-			str = ft_itoa(_int, "0123456789");
-			width_space = width_total - ft_strlen(str);
-			if (flag & zero)
+			arg._int = va_arg(arg.ptr, int);
+			arg.str = ft_itoa(arg._int, "0123456789");
+			arg.width_space = arg.width_total - ft_strlen(arg.str);
+			if (arg.flag & zero)
 			{
-				width_padding = width_space;
-				print_padding(width_padding);
-				write(1, str, ft_strlen(str));
+				arg.width_padding = arg.width_space;
+				print_padding(arg.width_padding);
+				write(1, arg.str, ft_strlen(arg.str));
 			}
-			else if (flag & minus)
+			else if (arg.flag & minus)
 			{
-				write(1, str, ft_strlen(str));
-				print_space(width_space);
+				write(1, arg.str, ft_strlen(arg.str));
+				print_space(arg.width_space);
 			}
 			else
 			{
-				print_space(width_space);	
-				write(1, str, ft_strlen(str));
+				print_space(arg.width_space);	
+				write(1, arg.str, ft_strlen(arg.str));
 			}
 		}
-		else if (flag & string)
+		else if (arg.flag & string)
 		{
-			str = va_arg(arg_ptr, char *);
-			if (width_total < ft_strlen(str))
-				width_total = ft_strlen(str);
-			width_space = width_total - ft_strlen(str);
-			if (flag & minus)
+			arg.str = va_arg(arg.ptr, char *);
+			if (arg.width_total < ft_strlen(arg.str))
+				arg.width_total = ft_strlen(arg.str);
+			arg.width_space = arg.width_total - ft_strlen(arg.str);
+			if (arg.flag & minus)
 			{
-				write(1, str, ft_strlen(str));
-				print_space(width_space);
+				write(1, arg.str, ft_strlen(arg.str));
+				print_space(arg.width_space);
 			}
 			else
 			{
-				print_space(width_space);
-				write(1, str, ft_strlen(str));
+				print_space(arg.width_space);
+				write(1, arg.str, ft_strlen(arg.str));
 			}	
 		}
-		else if (flag & pointer)
+		else if (arg.flag & pointer)
 		{
-			_int = va_arg(arg_ptr, unsigned long long);
-			str = ft_itoa(_int, "0123456789abcdef");
-			if (width_total < 11)
-				width_total = 11;
-			width_padding = 11 - ft_strlen(str) - 4;
-			width_space = width_total - 11;
-			if (flag & minus)
+			arg._int = va_arg(arg.ptr, unsigned long long);
+			arg.str = ft_itoa(arg._int, "0123456789abcdef");
+			if (arg.width_total < addr_len_fixed)
+				arg.width_total = addr_len_fixed;
+			arg.width_padding = addr_len_fixed - ft_strlen(arg.str) - 4;
+			arg.width_space = arg.width_total - addr_len_fixed;
+			if (arg.flag & minus)
 			{
 				write(1, "0x10", 4);
-				print_padding(width_padding);
-				write(1, str, ft_strlen(str));
-				print_space(width_space);
+				print_padding(arg.width_padding);
+				write(1, arg.str, ft_strlen(arg.str));
+				print_space(arg.width_space);
 			}
 			else
 			{
-				print_space(width_space);
+				print_space(arg.width_space);
 				write(1, "0x10", 4);
-				print_padding(width_padding);
-				write(1, str, ft_strlen(str));
+				print_padding(arg.width_padding);
+				write(1, arg.str, ft_strlen(arg.str));
 			}	
 		}
-		else if (flag & hex_up)
+		else if (arg.flag & hex_up)
 		{
-			_int = va_arg(arg_ptr, int);
-			str = ft_itoa(_int, "0123456789ABCDEF");
-			width_space = width_total - ft_strlen(str);
-			if (flag & zero)
+			arg._int = va_arg(arg.ptr, int);
+			arg.str = ft_itoa(arg._int, "0123456789ABCDEF");
+			arg.width_space = arg.width_total - ft_strlen(arg.str);
+			if (arg.flag & zero)
 			{
-				width_padding = width_space;
-				print_padding(width_padding);
-				write(1, str, ft_strlen(str));
+				arg.width_padding = arg.width_space;
+				print_padding(arg.width_padding);
+				write(1, arg.str, ft_strlen(arg.str));
 			}
-			else if (flag & minus)
+			else if (arg.flag & minus)
 			{
-				write(1, str, ft_strlen(str));
-				print_space(width_space);
+				write(1, arg.str, ft_strlen(arg.str));
+				print_space(arg.width_space);
 			}
 			else
 			{
-				print_space(width_space);	
-				write(1, str, ft_strlen(str));
+				print_space(arg.width_space);	
+				write(1, arg.str, ft_strlen(arg.str));
 			}
 		}
-		else if (flag & hex_low)
+		else if (arg.flag & hex_low)
 		{
-			_int = va_arg(arg_ptr, int);
-			str = ft_itoa(_int, "0123456789abcdef");
-			width_space = width_total - ft_strlen(str);
-			if (flag & zero)
+			arg._int = va_arg(arg.ptr, int);
+			arg.str = ft_itoa(arg._int, "0123456789abcdef");
+			arg.width_space = arg.width_total - ft_strlen(arg.str);
+			if (arg.flag & zero)
 			{
-				width_padding = width_space;
-				print_padding(width_padding);
-				write(1, str, ft_strlen(str));
+				arg.width_padding = arg.width_space;
+				print_padding(arg.width_padding);
+				write(1, arg.str, ft_strlen(arg.str));
 			}
-			else if (flag & minus)
+			else if (arg.flag & minus)
 			{
-				write(1, str, ft_strlen(str));
-				print_space(width_space);
+				write(1, arg.str, ft_strlen(arg.str));
+				print_space(arg.width_space);
 			}
 			else
 			{
-				print_space(width_space);	
-				write(1, str, ft_strlen(str));
+				print_space(arg.width_space);	
+				write(1, arg.str, ft_strlen(arg.str));
 			}
 		}
 	}
-	va_end(arg_ptr);
+	va_end(arg.ptr);
 	write(1, "\n", 1);
-	return (width_total);
+	return (arg.width_total);
 }

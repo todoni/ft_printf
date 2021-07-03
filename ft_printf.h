@@ -30,7 +30,20 @@ enum	e_flags
 	u_integer = 1 << 3,
 	hex_low = 1 << 2,
 	hex_up = 1 << 1,
-	percent = 1 << 0
+	percent = 1 << 0,
+	addr_len_fixed = 11
 };
+
+typedef	struct s_component
+{
+	int		width_space;
+	int		width_total;
+	int		width_padding;
+	int		width_prec;
+	char	*str;
+	int		_int;
+	int		flag;
+	va_list	ptr;
+}				t_component;
 
 #endif
