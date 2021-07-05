@@ -30,5 +30,6 @@ int	main(int argc, char **argv)
 	printf("%*.*x\n", 7, 5, 123);
 	printf("%*.*u\n", 7, 5, 123);
 	printf("-*.*abc%+-*.*defg*.*%#-10.5xhi%+-7.5%\n", 7, 5, 123, 42);
+	printf("%.d", 123);
 	return (0);
 }

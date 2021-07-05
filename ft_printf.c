@@ -201,10 +201,10 @@ int	ft_printf(const char *fmt, ...)
 		{
 			arg._int = va_arg(arg_ptr, unsigned long long);
 			arg.str = ft_itoa(arg._int, "0123456789abcdef");
-			if (arg.width_total < addr_len_fixed)
-				arg.width_total = addr_len_fixed;
-			arg.width_padding = addr_len_fixed - ft_strlen(arg.str) - 4;
-			arg.width_space = arg.width_total - addr_len_fixed;
+			if (arg.width_total < pointer_len_fixed)
+				arg.width_total = pointer_len_fixed;
+			arg.width_padding = pointer_len_fixed - ft_strlen(arg.str) - 4;
+			arg.width_space = arg.width_total - pointer_len_fixed;
 			if (arg.flag & minus)
 			{
 				write(1, "0x10", 4);

@@ -39,10 +39,10 @@ int	main()
 	result[28] = ft_printf("%-*.*x", 7, 5, 123);
 	result[29] = ft_printf("%-*.*u", 7, 5, 123);
 	result[30] = ft_printf("integer: %d, string: %s, hex lower: %x, pointer: %p ", 123, "456", 123, "456");
-	result[31] = ft_printf("integer: %10d, string: %10s, hex lower: %10x, pointer: %p", 123, "456", 123, "456");
-	result[32] = ft_printf("integer: %-10d, string: %-10s, hex lower: %-10x, pointer: %p", 123, "456", 123, "456");
-	result[33] = ft_printf("integer: %-*.*d, string: %s, hex lower: %-*.*x, pointer: %p", 7, 5, 123, "456", 7, 5, 123, "456");
-	result[34] = ft_printf("integer: %*.*d, string: %s, hex lower: %*.*x, pointer: %p", 7, 5, 123, "456", 7, 5, 123, "456");
+	//result[31] = ft_printf("integer: %10d, string: %10s, hex lower: %10x, pointer: %p", 123, "456", 123, "456");
+	//result[32] = ft_printf("integer: %-10d, string: %-10s, hex lower: %-10x, pointer: %p", 123, "456", 123, "456");
+	//result[33] = ft_printf("integer: %-*.*d, string: %s, hex lower: %-*.*x, pointer: %p", 7, 5, 123, "456", 7, 5, 123, "456");
+	//result[34] = ft_printf("integer: %*.*d, string: %s, hex lower: %*.*x, pointer: %p", 7, 5, 123, "456", 7, 5, 123, "456");
 	//for(int i = 0; i < n; i++)
 	//	printf("%d\n", result[i]);
 }
