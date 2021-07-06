@@ -40,7 +40,7 @@ typedef	struct s_component
 	int		width_space;
 	int		width_total;
 	int		width_padding;
-	int		width_prec;
+	int		width_precision;
 	char	*str;
 	int		_int;
 	int		flag;

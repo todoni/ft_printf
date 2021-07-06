@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdarg.h>
+#include "ft_printf.h"
 
 void	va_print(int argc, ...)
 {
