@@ -21,42 +21,35 @@ void	set_flag_align(const char **fmt, t_component *arg)
 		arg->flag |= zero;
 	else if (**fmt == '-')
 		arg->flag |= minus;
-	if ((arg->flag & zero) || (arg->flag & minus))
-		(*fmt)++;
 }
 
 void	set_flag_asterisk1(const char **fmt, t_component *arg)
 {
 	if (**fmt == '*')
-	{
 		arg->flag |= asterisk1;
-		(*fmt)++;
-	}
 }
 
 void	set_flag_asterisk2(const char **fmt, t_component *arg)
 {
 	if (**fmt == '*')
-	{
 		arg->flag |= asterisk2;
-		(*fmt)++;
-	}
 }
 
 void	set_flag_precision(const char **fmt, t_component *arg)
 {
 	if (**fmt == '.')
-	{
 		arg->flag |= precision;
+}
+
+void	move_to_next_field(const char **fmt)
+{
+	while (ft_isdigit(**fmt))
 		(*fmt)++;
-	}
 }
 
 void	get_width(const char **fmt, int *width)
 {
 	*width = ft_atoi(*fmt);
-	while (ft_isdigit(**fmt))
-		(*fmt)++;
 }
 
 void	set_flag_type(const char **fmt, t_component *arg)
@@ -170,16 +163,22 @@ int	ft_printf(const char *fmt, ...)
 		initialize_component(&arg);
 		print_untyped_string(&fmt);
 		set_flag_align(&fmt, &arg);
+		fmt += flag_on(arg.flag & zero);
+		fmt += flag_on(arg.flag & minus);
 		set_flag_asterisk1(&fmt, &arg);
-		if (!(arg.flag & asterisk1))
-			get_width(&fmt, &arg.width_total);
+		fmt += flag_on(arg.flag & asterisk1);
+		get_width(&fmt, &arg.width_total);
+		move_to_next_field(&fmt);
 		set_flag_precision(&fmt, &arg);
+		fmt += flag_on(arg.flag & precision);
 		set_flag_asterisk2(&fmt, &arg);
-		if (!(arg.flag & asterisk2))
-			get_width(&fmt, &arg.width_precision);
+		fmt += flag_on(arg.flag & asterisk2);
+		get_width(&fmt, &arg.width_precision);
+		move_to_next_field(&fmt);
 		set_flag_type(&fmt, &arg);
 		set_width(&arg, &arg_ptr);
-		get_arg_value(&arg, &arg_ptr);
+		if (get_arg_value(&arg, &arg_ptr) == -1)
+			return (-1);
 		if (arg.width_total < ft_strlen(arg.str))
 			arg.width_total = ft_strlen(arg.str);
 		arg.width_space = arg.width_total - ft_strlen(arg.str);
