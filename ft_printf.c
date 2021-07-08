@@ -101,14 +101,16 @@ void	set_width(t_component *arg, va_list *arg_ptr)
 		arg->width_precision = va_arg(*arg_ptr, int);
 }
 
-void	get_arg_value(t_component *arg, va_list *arg_ptr)
+int	get_arg_value(t_component *arg, va_list *arg_ptr)
 {
 	if (arg->flag & character)
 		arg->_int = va_arg(*arg_ptr, int);
 	else if ((arg->flag & integer) || (arg->flag & u_integer))
 	{
 		arg->_int = va_arg(*arg_ptr, int);
-		arg->str = ft_itoa(arg->_int, "0123456789");	
+		arg->str = ft_itoa(arg->_int, "0123456789");
+		if (arg->str == 0)
+			return (-1);
 	}
 	else if (arg->flag & string)
 		arg->str = va_arg(*arg_ptr, char *);
@@ -116,17 +118,24 @@ void	get_arg_value(t_component *arg, va_list *arg_ptr)
 	{
 		arg->_int = va_arg(*arg_ptr, unsigned long long);
 		arg->str = ft_itoa(arg->_int, "0123456789abcdef");
+		if (arg->str == 0)
+			return (-1);
 	}
 	else if (arg->flag & hex_up)
 	{
 		arg->_int = va_arg(*arg_ptr, int);
 		arg->str = ft_itoa(arg->_int, "0123456789ABCDEF");
+		if (arg->str == 0)
+			return (-1);
 	}
 	else if (arg->flag & hex_low)
 	{
 		arg->_int = va_arg(*arg_ptr, int);
 		arg->str = ft_itoa(arg->_int, "0123456789abcdef");
+		if (arg->str == 0)
+			return (-1);
 	}
+	return (0);
 }
 
 int	flag_on(int calculation)
@@ -185,6 +194,8 @@ int	ft_printf(const char *fmt, ...)
 		print_padding(arg.width_padding - (4 * flag_on(arg.flag & pointer)));
 		write(1, arg.str, ft_strlen(arg.str));
 		print_space(arg.width_space * flag_on(arg.flag & minus));
+		if (arg.flag & malloc_free)
+			free(arg.str);
 	}
 	va_end(arg_ptr);
 	write(1, "\n", 1);

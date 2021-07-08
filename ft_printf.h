@@ -32,6 +32,7 @@ enum	e_flags
 	hex_low = 1 << 2,
 	hex_up = 1 << 1,
 	percent = 1 << 0,
+	malloc_free = 0b0000000111110,
 	pointer_len_fixed = 11
 };
 

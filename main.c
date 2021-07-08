@@ -45,4 +45,5 @@ int	main()
 	//result[34] = ft_printf("integer: %*.*d, string: %s, hex lower: %*.*x, pointer: %p", 7, 5, 123, "456", 7, 5, 123, "456");
 	//for(int i = 0; i < n; i++)
 	//	printf("%d\n", result[i]);
+	while(1){;};
 }
