@@ -19,8 +19,11 @@
 
 enum	e_flags
 {
-	zero = 1 << 12,
-	minus = 1 << 11,
+	zero = 1 << 15,
+	minus = 1 << 14,
+	plus = 1 << 13,
+	space = 1 << 12,
+	sharp = 1 << 11,
 	precision = 1 << 10,
 	asterisk1 = 1 << 9,
 	asterisk2 = 1 << 8,
