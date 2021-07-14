@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sohan <sohan@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/11 21:11:36 by sohan             #+#    #+#             */
-/*   Updated: 2021/05/22 18:52:37 by sohan            ###   ########.fr       */
+/*   Created: 2021/07/15 04:58:55 by sohan             #+#    #+#             */
+/*   Updated: 2021/07/15 05:09:26 by sohan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_printf.h"
 
-void	ft_lstdelone(t_list *lst, void (*del)(void*))
+int	ft_printf(const char *fmt, ...)
 {
-	del(lst->content);
-	free(lst);
+	write(1, fmt, 0);
+	return (-1);
 }

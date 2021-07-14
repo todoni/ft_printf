@@ -1,29 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*   ft_printf_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sohan <sohan@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/03 18:30:28 by sohan             #+#    #+#             */
-/*   Updated: 2021/05/17 19:49:31 by sohan            ###   ########.fr       */
+/*   Created: 2021/07/15 04:58:55 by sohan             #+#    #+#             */
+/*   Updated: 2021/07/15 05:09:59 by sohan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_printf.h"
 
-char	*ft_strrchr(const char *s, int c)
+int	ft_printf(const char *fmt, ...)
 {
-	size_t	len;
-
-	len = ft_strlen(s);
-	if (c == 0)
-		return ((char *)(s + ft_strlen(s)));
-	while (len > 0)
-	{
-		if (s[len - 1] == (char)c)
-			return ((char *)s + len - 1);
-		len--;
-	}
-	return (0);
+	write(1, fmt, 0);
+	return (-1);
 }
