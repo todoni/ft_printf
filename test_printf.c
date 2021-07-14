@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+#include <unistd.h>
 
 int	main(int argc, char **argv)
 {
@@ -18,7 +19,7 @@ int	main(int argc, char **argv)
 	int	flags;
 	int flag = 4112;
 	int test = 1 << 12;
-	char *str = "123";
+	char *str = "123\nasf";
 	char str2 = 'a';
 
 	flags = 0b0011;
@@ -40,5 +41,11 @@ int	main(int argc, char **argv)
 	printf("%*.*u\n", 7, 5, 123);
 	printf("-*.*abc%+-*.*defg*.*%#-10.5xhi%+-7.5%\n", 7, 5, 123, 42);
 	printf("%.d", 123);
+	while (*str)
+	{
+		write(1, str, 1);
+		str++;
+	}
+	printf("\\");
 	return (0);
 }
