@@ -1,21 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sohan <sohan@student.42seoul.kr>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/02 13:40:41 by sohan             #+#    #+#             */
-/*   Updated: 2021/07/02 13:40:42 by sohan            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#ifndef	FT_PRINTF_H
-# define	FT_PRINTF_H
-
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdarg.h>
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
+# include <unistd.h>
 
 enum	e_flags
 {
@@ -39,7 +24,7 @@ enum	e_flags
 	pointer_len_fixed = 11
 };
 
-typedef	struct s_component
+typedef struct s_component
 {
 	int		width_space;
 	int		width_total;
@@ -51,4 +36,5 @@ typedef	struct s_component
 }				t_component;
 
 int	ft_printf(const char *fmt, ...);
+
 #endif

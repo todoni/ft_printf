@@ -12,7 +12,7 @@
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-NAME = libft.a
+NAME = libftprintf.a
 SOURCES = ft_printf.c
 SRCBONUS = ft_printf_bonus.c
 
