@@ -15,6 +15,16 @@ void	print_padding(int width_padding)
 		write(1, "0", 1);
 }
 
+void	set_flag_prefixed(const char **fmt, t_component *arg)
+{
+	if (**fmt == '+')
+		arg->flag |= plus;
+	else if (**fmt == ' ')
+		arg->flag |= space;
+	else if (**fmt == '#')
+		arg->flag |= sharp;
+}
+
 void	set_flag_align(const char **fmt, t_component *arg)
 {
 	if (**fmt == '0')
@@ -162,6 +172,10 @@ int	ft_printf(const char *fmt, ...)
 	{
 		initialize_component(&arg);
 		print_untyped_string(&fmt);
+		set_flag_prefixed(&fmt, &arg);
+		fmt += flag_on(arg.flag & space);
+		fmt += flag_on(arg.flag & plus);
+		fmt += flag_on(arg.flag & sharp);
 		set_flag_align(&fmt, &arg);
 		fmt += flag_on(arg.flag & zero);
 		fmt += flag_on(arg.flag & minus);
@@ -181,13 +195,18 @@ int	ft_printf(const char *fmt, ...)
 			return (-1);
 		if (arg.width_total < ft_strlen(arg.str))
 			arg.width_total = ft_strlen(arg.str);
-		arg.width_space = arg.width_total - ft_strlen(arg.str);
+		arg.width_space = arg.width_total - ft_strlen(arg.str) - (flag_on(arg.flag & space) + (2 * flag_on(arg.flag & sharp)) + flag_on(arg.flag & plus));
 		arg.width_padding = arg.width_precision - (flag_on(arg.flag & asterisk2) * ft_strlen(arg.str));
 		arg.width_space -= arg.width_padding;
+		write(1, " ", 1 * flag_on(arg.flag & space));
+		write(1, "0x", 2 * flag_on(arg.flag & sharp) * flag_on(arg.flag & zero));
+		write(1, "+", 1 * flag_on(arg.flag & plus) * flag_on(arg.flag & zero));
 		if (arg.flag & zero)
 			print_padding(arg.width_space);
 		else
 			print_space(arg.width_space * (1 - flag_on(arg.flag & minus)));
+		write(1, "+", (flag_on(arg.flag & plus) * (1 - flag_on(arg.flag & zero))));
+		write(1, "0x", 2 * (flag_on(arg.flag & sharp) * (1 - flag_on(arg.flag & zero))));
 		write(1, &arg._int, 1 * flag_on(arg.flag & character));
 		write(1, "0x10", 4 * flag_on(arg.flag & pointer));
 		print_padding(arg.width_padding - (4 * flag_on(arg.flag & pointer)));
