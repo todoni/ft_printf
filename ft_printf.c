@@ -193,9 +193,9 @@ int	ft_printf(const char *fmt, ...)
 		set_width(&arg, &arg_ptr);
 		if (get_arg_value(&arg, &arg_ptr) == -1)
 			return (-1);
-		if (arg.width_total < ft_strlen(arg.str))
+		if (arg.width_total < (int)ft_strlen(arg.str))
 			arg.width_total = ft_strlen(arg.str);
-		arg.width_space = arg.width_total - ft_strlen(arg.str) - (flag_on(arg.flag & space) + (2 * flag_on(arg.flag & sharp)) + flag_on(arg.flag & plus));
+		arg.width_space = arg.width_total - ft_strlen(arg.str) - (flag_on(arg.flag & space) + (2 * flag_on(arg.flag & sharp)) + flag_on(arg.flag & plus) + flag_on(arg.flag & percent));
 		arg.width_padding = arg.width_precision - (flag_on(arg.flag & asterisk2) * ft_strlen(arg.str));
 		arg.width_space -= arg.width_padding;
 		write(1, " ", 1 * flag_on(arg.flag & space));
@@ -211,11 +211,12 @@ int	ft_printf(const char *fmt, ...)
 		write(1, "0x10", 4 * flag_on(arg.flag & pointer));
 		print_padding(arg.width_padding - (4 * flag_on(arg.flag & pointer)));
 		write(1, arg.str, ft_strlen(arg.str));
+		write(1, "%", flag_on(arg.flag & percent));
 		print_space(arg.width_space * flag_on(arg.flag & minus));
 		if (arg.flag & malloc_free)
 			free(arg.str);
+		print_untyped_string(&fmt);
 	}
 	va_end(arg_ptr);
-	write(1, "\n", 1);
 	return (arg.width_total);
 }

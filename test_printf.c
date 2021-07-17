@@ -38,7 +38,7 @@ int	main(int argc, char **argv)
 	printf("%*.*d\n", 7, 5, 123);
 	printf("%*.*x\n", 7, 5, 123);
 	printf("%*.*u\n", 7, 5, 123);
-	printf("-*.*abc%+*.*defg*.*%#10.5xhi%+7.5d\n%-+10d\n%+10d\n\n%-10d\n", 7, 5, 123, 42, 42, 42, 42, 42);
-	printf("%.d", 123);
+	printf("-*.*abc%+*.*defg*.*%-#10.5xhi%+7.5d\n%-+10d\n%+10d\n\n%-10d\n", 7, 5, 123, 42, 42, 42, 42, 42);
+	printf("%-5%");
 	return (0);
 }
