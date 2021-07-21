@@ -15,39 +15,39 @@ void	print_padding(int width_padding)
 		write(1, "0", 1);
 }
 
-void	set_flag_prefixed(const char **fmt, t_component *arg)
+void	set_flag_prefixed(const char *fmt, t_component *arg)
 {
-	if (**fmt == '+')
+	if (*fmt == '+')
 		arg->flag |= plus;
-	else if (**fmt == ' ')
+	else if (*fmt == ' ')
 		arg->flag |= space;
-	else if (**fmt == '#')
+	else if (*fmt == '#')
 		arg->flag |= sharp;
 }
 
-void	set_flag_align(const char **fmt, t_component *arg)
+void	set_flag_align(const char *fmt, t_component *arg)
 {
-	if (**fmt == '0')
+	if (*fmt == '0')
 		arg->flag |= zero;
-	else if (**fmt == '-')
+	else if (*fmt == '-')
 		arg->flag |= minus;
 }
 
-void	set_flag_asterisk1(const char **fmt, t_component *arg)
+void	set_flag_asterisk1(const char *fmt, t_component *arg)
 {
-	if (**fmt == '*')
+	if (*fmt == '*')
 		arg->flag |= asterisk1;
 }
 
-void	set_flag_asterisk2(const char **fmt, t_component *arg)
+void	set_flag_asterisk2(const char *fmt, t_component *arg)
 {
-	if (**fmt == '*')
+	if (*fmt == '*')
 		arg->flag |= asterisk2;
 }
 
-void	set_flag_precision(const char **fmt, t_component *arg)
+void	set_flag_precision(const char *fmt, t_component *arg)
 {
-	if (**fmt == '.')
+	if (*fmt == '.')
 		arg->flag |= precision;
 }
 
@@ -57,32 +57,31 @@ void	move_to_next_field(const char **fmt)
 		(*fmt)++;
 }
 
-void	get_width(const char **fmt, int *width)
+void	get_width(const char *fmt, int *width)
 {
-	*width = ft_atoi(*fmt);
+	*width = ft_atoi(fmt);
 }
 
-void	set_flag_type(const char **fmt, t_component *arg)
+void	set_flag_type(const char *fmt, t_component *arg)
 {
-	if (**fmt == 'c')
+	if (*fmt == 'c')
 		arg->flag |= character;
-	else if (**fmt == 's')
+	else if (*fmt == 's')
 		arg->flag |= string;
-	else if (**fmt == 'p')
+	else if (*fmt == 'p')
 		arg->flag |= pointer;
-	else if (**fmt == 'd')
+	else if (*fmt == 'd')
 		arg->flag |= integer;
-	else if (**fmt == 'i')
+	else if (*fmt == 'i')
 		arg->flag |= integer;
-	else if (**fmt == 'u')
+	else if (*fmt == 'u')
 		arg->flag |= u_integer;
-	else if (**fmt == 'x')
+	else if (*fmt == 'x')
 		arg->flag |= hex_low;
-	else if (**fmt == 'X')
+	else if (*fmt == 'X')
 		arg->flag |= hex_up;
-	else if (**fmt == '%')
+	else if (*fmt == '%')
 		arg->flag |= percent;
-	(*fmt)++;
 }
 
 void	print_untyped_string(const char **fmt)
@@ -147,6 +146,18 @@ int	flag_on(int calculation)
 		return (1);
 	return (calculation);
 }
+
+void	set_flags(const char *fmt, t_component *arg)
+{
+	set_flag_prefixed(fmt, arg);
+	set_flag_align(fmt, arg);
+}
+
+void	move_addr_fmt(const char **fmt)
+{
+	if (**fmt == '+' || **fmt == '-' || **fmt == ' ' || **fmt == '#' || **fmt == '0')
+		(*fmt)++;
+}
 /*int	ft_vsprintf(char *str, const char *fmt, va_list arg_ptr)
 {
 
@@ -172,24 +183,22 @@ int	ft_printf(const char *fmt, ...)
 	{
 		initialize_component(&arg);
 		print_untyped_string(&fmt);
-		set_flag_prefixed(&fmt, &arg);
-		fmt += flag_on(arg.flag & space);
-		fmt += flag_on(arg.flag & plus);
-		fmt += flag_on(arg.flag & sharp);
-		set_flag_align(&fmt, &arg);
-		fmt += flag_on(arg.flag & zero);
-		fmt += flag_on(arg.flag & minus);
-		set_flag_asterisk1(&fmt, &arg);
+		set_flags(fmt, &arg);
+		move_addr_fmt(&fmt);
+		set_flags(fmt, &arg);
+		move_addr_fmt(&fmt);
+		set_flag_asterisk1(fmt, &arg);
 		fmt += flag_on(arg.flag & asterisk1);
-		get_width(&fmt, &arg.width_total);
+		get_width(fmt, &arg.width_total);
 		move_to_next_field(&fmt);
-		set_flag_precision(&fmt, &arg);
+		set_flag_precision(fmt, &arg);
 		fmt += flag_on(arg.flag & precision);
-		set_flag_asterisk2(&fmt, &arg);
+		set_flag_asterisk2(fmt, &arg);
 		fmt += flag_on(arg.flag & asterisk2);
-		get_width(&fmt, &arg.width_precision);
+		get_width(fmt, &arg.width_precision);
 		move_to_next_field(&fmt);
-		set_flag_type(&fmt, &arg);
+		set_flag_type(fmt, &arg);
+		fmt++;
 		set_width(&arg, &arg_ptr);
 		if (get_arg_value(&arg, &arg_ptr) == -1)
 			return (-1);
