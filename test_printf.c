@@ -43,5 +43,12 @@ int	main()
 	printf("%.d\n", 42);
 	printf("%.0d\n", 42);
 	printf("%+5.7d\n", 42);
+	printf("%+5.7d\n\x0asdfasd\n", 123);
+	printf("%-7.5s\n", "hello");
+	printf("%-7.10s\n", "hello");
+	printf("%-7s\n", "hello");
+	printf("%7.10s\n", "hello");
+	printf("%10c\n", 'a');
+	printf("%-10c\n", 'a');
 	return (0);
 }

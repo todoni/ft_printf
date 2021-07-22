@@ -16,6 +16,8 @@ int	main()
 	result[7] = ft_printf("%10u\n", 123);
 	result[8] = ft_printf("%010u\n", 123);
 	result[9] = ft_printf("%-10u\n", 123);
+	result[9] = ft_printf("%10c\n", 'a');
+	result[9] = ft_printf("%-10c\n", 'a');
 	result[10] = ft_printf("my  :%11p\n", "123");
 	printf("lib :%11p\n", "123");
 	result[11] = ft_printf("my  :%-11p\n", "123");

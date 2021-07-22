@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include "libft.h"
 #include "ft_printf.h"
 
@@ -138,7 +139,7 @@ int	get_arg_value(t_component *arg, va_list *arg_ptr)
 	return (0);
 }
 
-int	flag_on(int calculation)
+bool	binary_to_boolean(int calculation)
 {
 	if (calculation != 0)
 		return (1);
@@ -189,13 +190,13 @@ int	ft_printf(const char *fmt, ...)
 		set_flags(fmt, &arg);
 		move_addr_fmt(&fmt);
 		set_flag_asterisk1(fmt, &arg);
-		fmt += flag_on(arg.flag & asterisk1);
+		fmt += binary_to_boolean(arg.flag & asterisk1);
 		get_width(fmt, &arg.width_total);
 		move_to_next_field(&fmt);
 		set_flag_precision(fmt, &arg);
-		fmt += flag_on(arg.flag & precision);
+		fmt += binary_to_boolean(arg.flag & precision);
 		set_flag_asterisk2(fmt, &arg);
-		fmt += flag_on(arg.flag & asterisk2);
+		fmt += binary_to_boolean(arg.flag & asterisk2);
 		get_width(fmt, &arg.width_precision);
 		move_to_next_field(&fmt);
 		set_flag_type(fmt, &arg);
@@ -205,24 +206,24 @@ int	ft_printf(const char *fmt, ...)
 			return (-1);
 		if (arg.width_total < (int)ft_strlen(arg.str))
 			arg.width_total = ft_strlen(arg.str);
-		arg.width_space = arg.width_total - ft_strlen(arg.str) - (flag_on(arg.flag & space) + (2 * flag_on(arg.flag & sharp)) + flag_on(arg.flag & plus) + flag_on(arg.flag & percent));
-		arg.width_padding = arg.width_precision - (flag_on(arg.flag & asterisk2) * ft_strlen(arg.str));
+		arg.width_space = arg.width_total - ft_strlen(arg.str) - (binary_to_boolean(arg.flag & space) + (2 * binary_to_boolean(arg.flag & sharp)) + binary_to_boolean(arg.flag & plus) + binary_to_boolean(arg.flag & percent) + binary_to_boolean(arg.flag & character));
+		arg.width_padding = arg.width_precision - (binary_to_boolean(arg.flag & asterisk2) * ft_strlen(arg.str));
 		arg.width_space -= arg.width_padding;
-		write(1, " ", 1 * flag_on(arg.flag & space));
-		write(1, "0x", 2 * flag_on(arg.flag & sharp) * flag_on(arg.flag & zero));
-		write(1, "+", 1 * flag_on(arg.flag & plus) * flag_on(arg.flag & zero));
+		write(1, " ", 1 * binary_to_boolean(arg.flag & space));
+		write(1, "0x", 2 * binary_to_boolean(arg.flag & sharp) * binary_to_boolean(arg.flag & zero));
+		write(1, "+", 1 * binary_to_boolean(arg.flag & plus) * binary_to_boolean(arg.flag & zero));
 		if (arg.flag & zero)
 			print_padding(arg.width_space);
 		else
-			print_space(arg.width_space * (1 - flag_on(arg.flag & minus)));
-		write(1, "+", (flag_on(arg.flag & plus) * (1 - flag_on(arg.flag & zero))));
-		write(1, "0x", 2 * (flag_on(arg.flag & sharp) * (1 - flag_on(arg.flag & zero))));
-		write(1, &arg._int, 1 * flag_on(arg.flag & character));
-		write(1, "0x10", 4 * flag_on(arg.flag & pointer));
-		print_padding(arg.width_padding - (4 * flag_on(arg.flag & pointer)));
+			print_space(arg.width_space * (1 - binary_to_boolean(arg.flag & minus)));
+		write(1, "+", (binary_to_boolean(arg.flag & plus) * (1 - binary_to_boolean(arg.flag & zero))));
+		write(1, "0x", 2 * (binary_to_boolean(arg.flag & sharp) * (1 - binary_to_boolean(arg.flag & zero))));
+		write(1, &arg._int, 1 * binary_to_boolean(arg.flag & character));
+		write(1, "0x10", 4 * binary_to_boolean(arg.flag & pointer));
+		print_padding(arg.width_padding - (4 * binary_to_boolean(arg.flag & pointer)));
 		write(1, arg.str, ft_strlen(arg.str));
-		write(1, "%", flag_on(arg.flag & percent));
-		print_space(arg.width_space * flag_on(arg.flag & minus));
+		write(1, "%", binary_to_boolean(arg.flag & percent));
+		print_space(arg.width_space * binary_to_boolean(arg.flag & minus));
 		if (arg.flag & malloc_free)
 			free(arg.str);
 	}
