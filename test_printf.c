@@ -12,7 +12,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-int	main(int argc, char **argv)
+int	main()
 {
 	int	arr[6] = {1234, 3, 1, 123, 12, 1};
 	int	flags;
@@ -39,6 +39,9 @@ int	main(int argc, char **argv)
 	printf("%*.*x\n", 7, 5, 123);
 	printf("%*.*u\n", 7, 5, 123);
 	printf("-*.*abc%+*.*defg*.*%-#10.5xhi%+7.5d\n%-+10d\n%+10d\n\n%-10d\n", 7, 5, 123, 42, 42, 42, 42, 42);
-	printf("%-5%");
+	printf("%-.%\n");
+	printf("%.d\n", 42);
+	printf("%.0d\n", 42);
+	printf("%+5.7d\n", 42);
 	return (0);
 }

@@ -3,7 +3,7 @@
 
 int	main()
 {
-	int n = 38;
+	int n = 43;
 	int	result[n];
 	
 	result[0] = ft_printf("%10s\n", "asdf");
@@ -32,7 +32,7 @@ int	main()
 	result[21] = ft_printf("%u\n", 123);
 	result[22] = ft_printf("%u\n", 123);
 	result[23] = ft_printf("%-u\n", 123);
-	result[24] = ft_printf("%*.*d\n", 7, 5, 123);
+	result[24] = ft_printf("%*.*d\n", 7, 10, 123);
 	result[25] = ft_printf("%*.*x\n", 7, 5, 123);
 	result[26] = ft_printf("%*.*u\n", 7, 5, 123);
 	result[27] = ft_printf("%-*.*d\n", 7, 5, 123);
@@ -46,6 +46,11 @@ int	main()
 	result[35] = ft_printf("% -010d\n", 42);
 	result[36] = ft_printf("%- 010d\n", 42);
 	result[37] = ft_printf("%-5%\n");
+	result[38] = ft_printf("%-.0d\n", 42);
+	result[39] = ft_printf("\n\n\n\n");
+	result[40] = ft_printf("%+5.7d %0.0x %10s\n", 42, 42, "42");
+	result[41] = ft_printf("%+5.7d %0.0x %10s\n", 42, 42, "42");
+
 	/*result[30] = ft_printf("integer: %d, string: %s, hex lower: %x, pointer: %p ", 123, "456", 123, "456");
 	result[31] = ft_printf("integer: %10d, string: %10s, hex lower: %10x, pointer: %p", 123, "456", 123, "456");
 	result[32] = ft_printf("integer: %-10d, string: %-10s, hex lower: %-10x, pointer: %p", 123, "456", 123, "456");

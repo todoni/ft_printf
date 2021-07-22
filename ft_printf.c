@@ -91,8 +91,6 @@ void	print_untyped_string(const char **fmt)
 		write(1, *fmt, 1);
 		(*fmt)++;
 	}
-	if (**fmt)
-		(*fmt)++;
 }
 
 void	set_width(t_component *arg, va_list *arg_ptr)
@@ -183,6 +181,9 @@ int	ft_printf(const char *fmt, ...)
 	{
 		initialize_component(&arg);
 		print_untyped_string(&fmt);
+		if (*fmt == 0)
+			break ;
+		fmt++;
 		set_flags(fmt, &arg);
 		move_addr_fmt(&fmt);
 		set_flags(fmt, &arg);
@@ -224,7 +225,6 @@ int	ft_printf(const char *fmt, ...)
 		print_space(arg.width_space * flag_on(arg.flag & minus));
 		if (arg.flag & malloc_free)
 			free(arg.str);
-		print_untyped_string(&fmt);
 	}
 	va_end(arg_ptr);
 	return (arg.width_total);
