@@ -1,6 +1,5 @@
 #include <stdarg.h>
 #include <unistd.h>
-#include <stdbool.h>
 #include "libft.h"
 #include "ft_printf.h"
 
@@ -139,7 +138,7 @@ int	get_arg_value(t_component *arg, va_list *arg_ptr)
 	return (0);
 }
 
-bool	binary_to_boolean(int calculation)
+int	binary_to_boolean(int calculation)
 {
 	if (calculation != 0)
 		return (1);
@@ -220,7 +219,7 @@ int	ft_printf(const char *fmt, ...)
 		write(1, "0x", 2 * (binary_to_boolean(arg.flag & sharp) * (1 - binary_to_boolean(arg.flag & zero))));
 		write(1, &arg._int, 1 * binary_to_boolean(arg.flag & character));
 		write(1, "0x10", 4 * binary_to_boolean(arg.flag & pointer));
-		print_padding(arg.width_padding - (4 * binary_to_boolean(arg.flag & pointer)));
+		print_padding((arg.width_padding - (4 * binary_to_boolean(arg.flag & pointer))) * (1 - binary_to_boolean(arg.flag & string)));
 		write(1, arg.str, ft_strlen(arg.str));
 		write(1, "%", binary_to_boolean(arg.flag & percent));
 		print_space(arg.width_space * binary_to_boolean(arg.flag & minus));

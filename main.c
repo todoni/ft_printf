@@ -3,7 +3,7 @@
 
 int	main()
 {
-	int n = 43;
+	int n = 46;
 	int	result[n];
 	
 	result[0] = ft_printf("%10s\n", "asdf");
@@ -52,6 +52,10 @@ int	main()
 	result[39] = ft_printf("\n\n\n\n");
 	result[40] = ft_printf("%+5.7d %0.0x %10s\n", 42, 42, "42");
 	result[41] = ft_printf("%+5.7d %0.0x %10s\n", 42, 42, "42");
+	result[42] = ft_printf("%-7.5s\n", "42");
+	result[43] = ft_printf("%7.10s\n", "42");
+	result[44] = ft_printf("%7.5s\n", "42");
+	result[45] = ft_printf("%++7d\n", 42);
 
 	/*result[30] = ft_printf("integer: %d, string: %s, hex lower: %x, pointer: %p ", 123, "456", 123, "456");
 	result[31] = ft_printf("integer: %10d, string: %10s, hex lower: %10x, pointer: %p", 123, "456", 123, "456");

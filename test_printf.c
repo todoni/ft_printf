@@ -50,5 +50,8 @@ int	main()
 	printf("%7.10s\n", "hello");
 	printf("%10c\n", 'a');
 	printf("%-10c\n", 'a');
+	printf("%007d\n", 42);
+	printf("%  7d\n", 42);
+	printf("%##7x\n", 42);
 	return (0);
 }
