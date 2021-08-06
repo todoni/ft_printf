@@ -207,7 +207,7 @@ int	ft_printf(const char *fmt, ...)
 			arg.width_total = ft_strlen(arg.str);
 		arg.width_space = arg.width_total - ft_strlen(arg.str) - (binary_to_boolean(arg.flag & space) + (2 * binary_to_boolean(arg.flag & sharp)) + binary_to_boolean(arg.flag & plus) + binary_to_boolean(arg.flag & percent) + binary_to_boolean(arg.flag & character));
 		arg.width_padding = arg.width_precision - (binary_to_boolean(arg.flag & asterisk2) * ft_strlen(arg.str));
-		arg.width_space -= arg.width_padding;
+		arg.width_space -= (1 - binary_to_boolean(arg.flag & precision)) * arg.width_padding;
 		write(1, " ", 1 * binary_to_boolean(arg.flag & space));
 		write(1, "0x", 2 * binary_to_boolean(arg.flag & sharp) * binary_to_boolean(arg.flag & zero));
 		write(1, "+", 1 * binary_to_boolean(arg.flag & plus) * binary_to_boolean(arg.flag & zero));
