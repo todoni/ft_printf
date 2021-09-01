@@ -48,6 +48,7 @@ int	main()
 	result[35] = ft_printf("% -010d\n", 42);
 	result[36] = ft_printf("%- 010d\n", 42);
 	result[37] = ft_printf("%-5%\n");
+	result[37] = printf("%-5%\n");
 	result[38] = ft_printf("%-.0d\n", 42);
 	result[39] = ft_printf("\n\n\n\n");
 	result[40] = ft_printf("%+5.7d %0.0x %10s\n", 42, 42, "42");
