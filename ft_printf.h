@@ -19,14 +19,12 @@
 
 enum	e_flags
 {
-	zero = 1 << 15,
-	minus = 1 << 14,
-	plus = 1 << 13,
-	space = 1 << 12,
-	sharp = 1 << 11,
-	precision = 1 << 10,
-	asterisk1 = 1 << 9,
-	asterisk2 = 1 << 8,
+	zero = 1 << 13,
+	minus = 1 << 12,
+	plus = 1 << 11,
+	space = 1 << 10,
+	sharp = 1 << 9,
+	precision = 1 << 8,
 	character = 1 << 7,
 	string = 1 << 6,
 	pointer = 1 << 5,
@@ -35,7 +33,6 @@ enum	e_flags
 	hex_low = 1 << 2,
 	hex_up = 1 << 1,
 	percent = 1 << 0,
-	malloc_free = 0b0000000111110,
 	pointer_len_fixed = 11
 };
 
