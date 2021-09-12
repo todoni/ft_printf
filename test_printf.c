@@ -13,7 +13,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 
-int	main(int argc, char **argv)
+int	main()
 {
 	int	arr[6] = {1234, 3, 1, 123, 12, 1};
 	int	flags;
@@ -41,11 +41,21 @@ int	main(int argc, char **argv)
 	printf("%*.*u\n", 7, 5, 123);
 	printf("-*.*abc%+-*.*defg*.*%#-10.5xhi%+-7.5%\n", 7, 5, 123, 42);
 	printf("%.d", 123);
-	while (*str)
-	{
-		write(1, str, 1);
-		str++;
-	}
 	printf("\\");
+	printf("-*.*abc%+*.*defg*.*%-#10.5xhi%+7.5d\n%-+10d\n%+10d\n\n%-10d\n", 7, 5, 123, 42, 42, 42, 42, 42);
+	printf("%-.%\n");
+	printf("%.d\n", 42);
+	printf("%.0d\n", 42);
+	printf("%+5.7d\n", 42);
+	printf("%+5.7d\n\x0asdfasd\n", 123);
+	printf("%-7.5s\n", "hello");
+	printf("%-7.10s\n", "hello");
+	printf("%-7s\n", "hello");
+	printf("%7.10s\n", "hello");
+	printf("%10c\n", 'a');
+	printf("%-10c\n", 'a');
+	printf("%007d\n", 42);
+	printf("%  7d\n", 42);
+	printf("%%7d\n", 42);
 	return (0);
 }
