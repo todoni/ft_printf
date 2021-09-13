@@ -49,13 +49,14 @@ int	main()
 	printf("%+5.7d\n", 42);
 	printf("%+5.7d\n\x0asdfasd\n", 123);
 	printf("%-7.5s\n", "hello");
-	printf("%-7.10s\n", "hello");
+	printf("%-7.3s\n", "hello");
 	printf("%-7s\n", "hello");
 	printf("%7.10s\n", "hello");
 	printf("%10c\n", 'a');
 	printf("%-10c\n", 'a');
 	printf("%007d\n", 42);
 	printf("%  7d\n", 42);
-	printf("%%7d\n", 42);
+	printf("%#30.15x\n", 2147483647);
+	printf("%#0.15x\n", 2147483647);
 	return (0);
 }
