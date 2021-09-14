@@ -1,30 +1,30 @@
 #include "ft_printf.h"
 
-int	function print untyped character(const char *fmt, int ret)
+int	print_untyped_character(const char *fmt, int ret)
 {
 	write(1, fmt, 1);
 	ret++;
 	return (ret);
 }
 
-void	function print padding by given length
+void	print_padding_by_length(int length)
 {
 	while (length--)
-		write(1, "0", 1); 
+		write(1, "0", 1);
 }
 
-void	function print space by given length
+void	print_space_by_length(int length)
 {
 	while (length--)
-		write(1, " ", 1); 
+		write(1, " ", 1);
 }
 
-void	function print 1 space
+void	print_one_space()
 {
 	write(1, " ", 1);
 }
 
-void	function print sign
+void	print_sign()
 {
 	if value < 0
 		write(1, "-", 1);
@@ -34,58 +34,88 @@ void	function print sign
 		return ;
 }
 
-void	function print argument by given length
+void	print_argument_by_length(int length)
 {
-	write(1, string, length); 
+	write(1, string, length);
 }
 
-void	function print 0x10
+void	print_prefix_pointer();
 {
 	write(1, "0x10", 4);
 }
 
-void	function print 0X
+void	print_prefix_sharp_up()
 {
 	write(1, "0X", 2);
 }
 
-void	function move address of fmt by given length(const char **fmt, int length)
+void	print_prefix_sharp_low()
+{
+	write(1, "0X", 2);
+}
+
+void	move_fmt_by_length(const char **fmt, int length)
 {
 	(*fmt) += length;
 }
 
-void	function set flag
+int	is_flag(char c)
 {
-	while (*fmt is flag type)
+	if (c == '0' || c == '-' || c == '+' || c == ' ' || c == '#')
+		return (1);
+	return (0);
+}
+
+void	set_flag(const char *fmt, int *flag)
+{
+	while (is_flag(*fmt))
+	{
 		if (*fmt == '0')
-			flag |= zero;
+			*flag |= zero;
 		else if (*fmt == '-')
-			flag |= minus;
+			*flag |= minus;
 		else if (*fmt == '+')
-			flag |= plus;
+			*flag |= plus;
 		else if (*fmt == ' ')
-			flag |= space;
+			*flag |= space;
 		else if (*fmt == '#')
-			flag |= sharp;
-		move address of fmt by 1;
+			*flag |= sharp;
+		move_fmt_by_length(&fmt, 1);
+	}
 }
 
-void	function set width
+int	find_digit(int num)
 {
-	if (*fmt is number and not '0')
-		width = atoi(fmt);
-		move address of fmt by digit;
+	int digit;
+
+	while (num)
+	{
+		num /= 10;
+		digit++;
+	}
+	return (digit);
 }
 
-void	function set precision
+void	set_width(const char *fmt, int *width)
+{
+	if (ft_isdigit(*fmt) && *fmt != '0')
+	{
+		*width = ft_atoi(fmt);
+		move_fmt_by_length(find_digit(*width));
+	}
+}
+
+void	set_precision(const char *fmt, int *precision)
 {
 	if (*fmt == '.')
-		move address of fmt by 1;
-		precision = atoi(fmt);
-		move address of fmt by digit;
+	{
+		move_fmt_by_length(&fmt, 1);
+		*precision = ft_atoi(fmt);
+		move_fmt_by_length(fint_digit(*precision));
+	}
 }
 
-void	function set type
+void	set_type(const char *fmt, int *type)
 {
 	if (*fmt == 'c')
 		type |= character;
@@ -105,58 +135,56 @@ void	function set type
 		type |= hex_up;
 	else if (*fmt == '%')
 		type |= percent;
-	
-	move address of fmt by 1;
+	move_fmt_by_length(&fmt, 1);
 }
 
-void	function set minimum field width
+void	set_minimum_field_width(const char *fmt, t_component *cmp)
 {
-	set flag;
-	set width;
-	set precision;
-	set type;
+	set_flag(&fmt, &cmp->flag);
+	set_width(&fmt, &cmp->width_total);
+	set_precision(&fmt, &cmp->width_precision);
+	set_type(&fmt, &cmp->flag);
 }
 
-void	function set print length
+void	set_print_length(t_component *cmp)
 {
-	length of space = width - plus flag length(1) - space flag length(1) - sharp flag length(2) - precision flag length(width of precision);
+	cmp->width_space = cmp->width_total - plus flag length(1) - space flag length(1) - sharp flag length(2) - precision flag length(width of precision);
 	total width = width;
-	length of padding = width of precision - length of value;
+	cmp->width_padding = cmp->width_precision - length of value;
 
 	if all lengths < 0
 		lengths = 0;
 }
 
-void	function get argument value
+void	get_argument_value(va_list arg_ptr, t_component *cmp)
 {
 	if (type & int_mask)
-		_int = va_arg(arg_ptr, int);
+		cmp->_int = va_arg(arg_ptr, int);
 	else if (type & string)
-		str = va_arg(arg_ptr, char*);
+		cmp->str = va_arg(arg_ptr, char*);
 	else if (type & pointer)
-		_int = va_arg(arg_ptr, unsigned long long);
+		cmp->_int = va_arg(arg_ptr, unsigned long long);
 	else if (type & u_integer)
-		_int = va_arg(arg_ptr, unsigned int);
+		cmp->_int = va_arg(arg_ptr, unsigned int);
 	else if (type & percent)
-		str = "%";
+		cmp->str = "%";
 }
 
-void	function make integer argument string
+void	integer_to_string(t_component *cmp)
 {
 	char	*base;
 
-	if (type & int_base_mask)
+	if (cmp->flag & int_base_mask)
 		base = "0123456789";
-	else if (type & x_base_mask)
+	else if (cmp->flag & x_base_mask)
 		base = "0123456789abcdef";
-	else if (type & hex_up)
+	else if (cmp->flag & hex_up)
 		base = "0123456789ABCDEF";
-	
-	if (!str)
-		str = ft_itoa(_int, base);
+	if (!cmp->str)
+		cmp->str = ft_itoa(_int, base);
 }
 
-void	function initialize function usage
+void	initialize_usage(t_fp *function[])
 {
 	while (number of functions)
 		functions[i] = NOT_USED;
@@ -180,26 +208,6 @@ void	function set function usage
 			function print 0X = USED;
 		if string bit on
 			function print zero = NOT_USED;
-}
-
-int	function get number of flags on
-{
-	int	num;
-
-	num = 0;
-	if (flag & zero)
-		num++;
-	if (flag & minus)
-		num++;
-	if (flag & plus)
-		num++;
-	if (flag & pointer)
-		num++;
-	if (flag & sharp)
-		num++;
-	if (flag & space)
-		num++;
-	return (num);
 }
 
 void	function numbering functions
