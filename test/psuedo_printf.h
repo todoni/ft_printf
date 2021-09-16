@@ -9,8 +9,8 @@
 /*   Updated: 2021/07/02 13:40:42 by sohan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef	FT_PRINTF_H
-# define	FT_PRINTF_H
+#ifndef	PSUEDO_PRINTF_H
+# define	PSUEDO_PRINTF_H
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -69,13 +69,13 @@ typedef	struct	s_component
 typedef struct	s_functions
 {
 	void	(*print_l)(int length);
-	void	(*print);
-	int		(*print_untyped)(const char *fmt, int ret);
+	void	(*print)();
+	void		(*print_untyped)(char *fmt, int ret);
 	int		usage;
 	int		priority;
 }				t_fp;
 
-typedef struct	s_function_node
+/*typedef struct	s_function_node
 {
 	t_fp	fp;
 	int		priority;
@@ -86,9 +86,13 @@ typedef struct	s_heap
 	t_heapnode *nodes;
 	int	size;
 }				t_heap;
-
+*/
 int	ft_isdigit(char c);
 int	ft_atoi(const char *str);
 int	ft_strlen(char *str);
+int	ft_printf(const char *fmt, ...);
 char *ft_itoa(int num, char *base);
+void	*ft_memset(void *b, int c, size_t len);
+void	*ft_calloc(size_t count, size_t size);
+
 #endif

@@ -1,4 +1,5 @@
 #include "psuedo_printf.h"
+#include "heap.h"
 
 int	print_untyped_character(const char *fmt, int ret)
 {
@@ -66,21 +67,21 @@ int	is_flag(char c)
 	return (0);
 }
 
-void	set_flag(const char *fmt, int *flag)
+void	set_flag(const char **fmt, int *flag)
 {
-	while (is_flag(*fmt))
+	while (is_flag(**fmt))
 	{
-		if (*fmt == '0')
+		if (**fmt == '0')
 			*flag |= zero;
-		else if (*fmt == '-')
+		else if (**fmt == '-')
 			*flag |= minus;
-		else if (*fmt == '+')
+		else if (**fmt == '+')
 			*flag |= plus;
-		else if (*fmt == ' ')
+		else if (**fmt == ' ')
 			*flag |= space;
-		else if (*fmt == '#')
+		else if (**fmt == '#')
 			*flag |= sharp;
-		move_fmt_by_length(&fmt, 1);
+		move_fmt_by_length(fmt, 1);
 	}
 }
 
@@ -88,6 +89,7 @@ int	find_digit(int num)
 {
 	int digit;
 
+	digit = 0;
 	while (num)
 	{
 		num /= 10;
@@ -96,49 +98,49 @@ int	find_digit(int num)
 	return (digit);
 }
 
-void	set_width(const char *fmt, int *width)
+void	set_width(const char **fmt, int *width)
 {
-	if (ft_isdigit(*fmt) && *fmt != '0')
+	if (ft_isdigit(**fmt) && **fmt != '0')
 	{
-		*width = ft_atoi(fmt);
-		move_fmt_by_length(&fmt, find_digit(*width));
+		*width = ft_atoi(*fmt);
+		move_fmt_by_length(fmt, find_digit(*width));
 	}
 }
 
-void	set_precision(const char *fmt, int *precision)
+void	set_precision(const char **fmt, int *precision)
 {
-	if (*fmt == '.')
+	if (**fmt == '.')
 	{
-		move_fmt_by_length(&fmt, 1);
-		*precision = ft_atoi(fmt);
-		move_fmt_by_length(&fmt, find_digit(*precision));
+		move_fmt_by_length(fmt, 1);
+		*precision = ft_atoi(*fmt);
+		move_fmt_by_length(fmt, find_digit(*precision));
 	}
 }
 
-void	set_type(const char *fmt, int *type)
+void	set_type(const char **fmt, int *type)
 {
-	if (*fmt == 'c')
+	if (**fmt == 'c')
 		*type |= character;
-	else if (*fmt == 's')
+	else if (**fmt == 's')
 		*type |= string;
-	else if (*fmt == 'p')
+	else if (**fmt == 'p')
 		*type |= pointer;
-	else if (*fmt == 'd')
+	else if (**fmt == 'd')
 		*type |= integer;
-	else if (*fmt == 'i')
+	else if (**fmt == 'i')
 		*type |= integer;
-	else if (*fmt == 'u')
+	else if (**fmt == 'u')
 		*type |= u_integer;
-	else if (*fmt == 'x')
+	else if (**fmt == 'x')
 		*type |= hex_low;
-	else if (*fmt == 'X')
+	else if (**fmt == 'X')
 		*type |= hex_up;
-	else if (*fmt == '%')
+	else if (**fmt == '%')
 		*type |= percent;
-	move_fmt_by_length(&fmt, 1);
+	move_fmt_by_length(fmt, 1);
 }
 
-void	set_minimum_field_width(const char *fmt, t_component *cmp)
+void	set_minimum_field_width(const char **fmt, t_component *cmp)
 {
 	set_flag(fmt, &cmp->flag);
 	set_width(fmt, &cmp->width_total);
@@ -193,126 +195,147 @@ void	integer_to_string(t_component *cmp)
 		cmp->str = ft_itoa(cmp->_int, base);
 }
 
-void	initialize_usage(t_fp *function[])
+void	initialize_usage(t_fp function[])
 {
 	int index;
 
 	index = 8;
 	while (index--)
-		function[index]->usage = NOT_USED;
+		function[index].usage = NOT_USED;
 }
 
-void	set_function_usage(int flag, t_fp *function[])
+void	set_function_usage(int flag, t_fp function[])
 {
-		function[ARGUMENT]->usage = USED;
-		function[SPACE]->usage = USED;
+		function[ARGUMENT].usage = USED;
+		function[SPACE].usage = USED;
 
 		if ((flag & zero) || (flag & precision))
-			function[ZERO]->usage = USED;
+			function[ZERO].usage = USED;
 		if (flag & pointer)
-			function[POINTER]->usage = USED;
+			function[POINTER].usage = USED;
 		if (flag & plus)
-			function[PLUS]->usage = USED;
+			function[PLUS].usage = USED;
 		if (flag & space)
-			function[SPACE]->usage = USED;
+			function[SPACE].usage = USED;
 		if (flag & sharp)
 		{
-			function[SHARPUP]->usage = USED;
-			function[SHARPLOW]->usage = USED;
+			function[SHARPUP].usage = USED;
+			function[SHARPLOW].usage = USED;
 		}
 		if (flag & string)
-			function[ZERO]->usage = NOT_USED;
+			function[ZERO].usage = NOT_USED;
 }
 
-void	set_function_number(t_fp *funtion[])
+void	set_function_number(t_fp funtion[])
 {
-	funtion[ARGUMENT]->print_l = print_argument_by_length;
-	funtion[SPACE]->print_l = print_space_by_length;
-	funtion[ONESPACE]->print = print_one_space;
-	funtion[PLUS]->print = print_sign;
-	funtion[SHARPUP]->print = print_prefix_sharp_up;
-	funtion[SHARPLOW]->print = print_prefix_sharp_low;
-	funtion[ZERO]->print_l = print_padding_by_length;
-	funtion[POINTER]->print_l = print_prefix_pointer;
+	funtion[ARGUMENT].print_untyped = print_argument_by_length;
+	funtion[SPACE].print_l = print_space_by_length;
+	funtion[ONESPACE].print = print_one_space;
+	funtion[PLUS].print = print_sign;
+	funtion[SHARPUP].print = print_prefix_sharp_up;
+	funtion[SHARPLOW].print = print_prefix_sharp_low;
+	funtion[ZERO].print_l = print_padding_by_length;
+	funtion[POINTER].print_l = print_prefix_pointer;
 }
 
-void	set_priority(t_fp *function[], int flag)
+void	set_priority(t_fp function[], int flag)
 {
 	int priority;
 	
 	priority = 5;
-	function[ARGUMENT]->priority = priority;
+	function[ARGUMENT].priority = priority;
 	if (flag & minus)
 	{
-		priority = function[ARGUMENT]->priority + 1;
-		function[SPACE]->priority = priority;
+		priority = function[ARGUMENT].priority + 1;
+		function[SPACE].priority = priority;
 	}
 	if (flag & zero)
 	{
-		priority = function[SPACE]->priority + 1;
-		function[ZERO]->priority = priority;
+		priority = function[SPACE].priority + 1;
+		function[ZERO].priority = priority;
 	}
 	if (flag & (pointer || sharp))
 	{
-		priority = function[ARGUMENT]->priority + 1;
-		function[POINTER]->priority = priority;
+		priority = function[ARGUMENT].priority + 1;
+		function[POINTER].priority = priority;
 	}
 	if (flag & plus)
 	{
-		priority = function[ARGUMENT]->priority + 1;
-		function[PLUS]->priority = priority;
+		priority = function[ARGUMENT].priority + 1;
+		function[PLUS].priority = priority;
 	}
 	if (flag & space)
 	{
 		priority = FIRST;
-		function[ONESPACE]->priority = priority;
+		function[ONESPACE].priority = priority;
 	}
 }
 
-void	heap_insert(t_fp )
+void	insert_to_heap(t_fp function[], Heap *H)
 {
 	int	index;
 
 	index = 8;
 	while (index--)
-		if function usage == USED
-			insert function to min heap;
+	{
+		if (function[index].usage == USED)
+			HEAP_Insert(H, function[index], function[index].priority);
+	}
 }
 
-void	function print by its priority
+void	print_by_priority(Heap *H)
 {
-	while (heap is not empty)
-		pop from heap;
-		execute function;
+	HeapNode func;
+
+	while (H->UsedSize)
+	{
+		HEAP_DeleteMin(H, &func);
+		if (func.fp.print_l)
+			func.fp.print_l(2);
+		if (func.fp.print)
+			func.fp.print();
+	}
 }
 
 int	ft_vprintf(const char *fmt, va_list arg_ptr)
 {
-	int	total printed length;
-	int each printed length;
+	//int	total printed length;
+	//int each printed length;
+	int	ret;
+	t_component cmp;
+	t_fp fp[8];
+	Heap *H;
 
+	H = HEAP_Create(8);
+	//fp = (t_fp *)malloc(sizeof(t_fp) * 8);
 	while(fmt)
 	{
-		if '%' appears
+		if (*fmt == '%')
 		{
-			move address of fmt by 1;
-			set minimum field width;
-			set priority;
-			insert to heap;
-			print by its priority;
-			total printed length += each printed length;
+			move_fmt_by_length(&fmt, 1);
+			set_minimum_field_width(&fmt, &cmp);
+			set_function_number(fp);
+			initialize_usage(fp);
+			set_function_usage(cmp.flag, fp);
+			set_priority(fp, cmp.flag);
+			insert_to_heap(fp, H);
+			print_by_priority(H);
+			//total printed length += each printed length;
 			continue;
 		}
-		print untyped character;
-		move address of fmt by 1;
+		ret += print_untyped_character(fmt, ret);
+		move_fmt_by_length(&fmt, 1);
 	}
-	return (total printed length);
+	return (ret);
 }
 
 int	ft_printf(const char *fmt, ...)
 {
+	int ret;
+
 	va_list arg_ptr;
 	va_start(arg_ptr, fmt);
-	ft_vprintf(fmt, arg_ptr);
+	ret = ft_vprintf(fmt, arg_ptr);
 	va_end(arg_ptr);
+	return (ret);
 }
