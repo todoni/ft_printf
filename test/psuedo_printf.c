@@ -283,7 +283,7 @@ void	insert_to_heap(t_fp function[], Heap *H)
 	}
 }
 
-void	print_by_priority(Heap *H)
+void	print_by_priority(Heap *H, t_component cmp)
 {
 	HeapNode func;
 
@@ -294,10 +294,33 @@ void	print_by_priority(Heap *H)
 			func.fp.print_l(2);
 		if (func.fp.print)
 			func.fp.print();
+		if (func.fp.print_untyped)
+			func.fp.print_untyped(cmp.str, cmp.width_total);
 	}
 }
 
-int	ft_vprintf(const char *fmt, va_list arg_ptr)
+void	init(t_component *cmp)
+{
+	cmp->_int = 0;
+	cmp->flag = 0;
+	cmp->str = 0;
+	cmp->width_flag = 0;
+	cmp->width_padding = 0;
+	cmp->width_precision = 0;
+	cmp->width_space = 0;
+	cmp->width_total = 0;
+}
+
+void	init_function(t_fp *fp)
+{
+	fp->print = 0;
+	fp->print_l = 0;
+	fp->print_untyped = 0;
+	fp->priority = 0;
+	fp->usage = 0;
+}
+
+int	ft_printf(const char *fmt, ...)
 {
 	//int	total printed length;
 	//int each printed length;
@@ -305,31 +328,48 @@ int	ft_vprintf(const char *fmt, va_list arg_ptr)
 	t_component cmp;
 	t_fp fp[8];
 	Heap *H;
+	va_list arg_ptr;
+	va_start(arg_ptr, fmt);
 
-	H = HEAP_Create(8);
+			for (int i = 0; i < 8; i++)
+				init_function(&fp[i]);
+	set_function_number(fp);
+	init(&cmp);
+	//H = HEAP_Create(8);
 	//fp = (t_fp *)malloc(sizeof(t_fp) * 8);
-	while(fmt)
+	while(*fmt)
 	{
 		if (*fmt == '%')
 		{
+
+			H = HEAP_Create(8);
 			move_fmt_by_length(&fmt, 1);
 			set_minimum_field_width(&fmt, &cmp);
-			set_function_number(fp);
 			initialize_usage(fp);
 			set_function_usage(cmp.flag, fp);
 			set_priority(fp, cmp.flag);
 			insert_to_heap(fp, H);
-			print_by_priority(H);
+			get_argument_value(arg_ptr, &cmp);
+			integer_to_string(&cmp);
+			set_print_length(&cmp);
+			print_by_priority(H, cmp);
 			//total printed length += each printed length;
-			continue;
+			//continue;
+			HEAP_Destroy(H);
+			init(&cmp);
+			for (int i = 0; i < 8; i++)
+				init_function(&fp[i]);
 		}
 		ret += print_untyped_character(fmt, ret);
 		move_fmt_by_length(&fmt, 1);
+		if (*fmt == '\0')
+			break;
 	}
+	va_end(arg_ptr);
 	return (ret);
 }
 
-int	ft_printf(const char *fmt, ...)
+/*int	ft_printf(const char *fmt, ...)
 {
 	int ret;
 
@@ -338,4 +378,4 @@ int	ft_printf(const char *fmt, ...)
 	ret = ft_vprintf(fmt, arg_ptr);
 	va_end(arg_ptr);
 	return (ret);
-}
+}*/

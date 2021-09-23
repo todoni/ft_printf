@@ -17,7 +17,7 @@
 # include <stdarg.h>
 
 # define NOT_USED -1
-# define USED 0
+# define USED 1
 # define FIRST 0
 
 enum	e_mask
