@@ -19,7 +19,7 @@ static int	find_digit(int n, int base)
 	digit = 0;
 	if (n == 0)
 		digit = 1;
-	while (n)
+	while (n && base)
 	{
 		n /= base;
 		digit++;

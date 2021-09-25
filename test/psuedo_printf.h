@@ -51,7 +51,8 @@ enum	e_funtions
 	SHARPUP,
 	SHARPLOW,
 	ZERO,
-	POINTER
+	POINTER,
+	CHAR
 };
 
 typedef	struct	s_component
@@ -62,7 +63,9 @@ typedef	struct	s_component
 	int		width_precision;
 	int		width_flag;
 	char	*str;
-	long long int		_int;
+	int		_int;
+	int		_uint;
+	unsigned long long int		_pointer;
 	int		flag;
 }				t_component;
 

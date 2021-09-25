@@ -25,6 +25,11 @@ void	print_one_space()
 	write(1, " ", 1);
 }
 
+void	print_character(int c)
+{
+	write(1, &c, 1);
+}
+
 void	print_sign(int value)
 {
 	if (value < 0)
@@ -90,6 +95,8 @@ int	find_digit(int num)
 	int digit;
 
 	digit = 0;
+	if (!num)
+		digit = 1;
 	while (num)
 	{
 		num /= 10;
@@ -150,7 +157,7 @@ void	set_minimum_field_width(const char **fmt, t_component *cmp)
 
 void	set_width_flag(t_component	*cmp)
 {
-	if (cmp->flag & (plus || space))
+	if ((cmp->flag & plus) || (cmp->flag &space))
 		cmp->width_flag++;
 	if (cmp->flag & sharp)
 		cmp->width_flag += 2;
@@ -174,9 +181,9 @@ void	get_argument_value(va_list arg_ptr, t_component *cmp)
 	else if (cmp->flag & string)
 		cmp->str = va_arg(arg_ptr, char*);
 	else if (cmp->flag & pointer)
-		cmp->_int = va_arg(arg_ptr, unsigned long long);
+		cmp->_pointer = va_arg(arg_ptr, unsigned long long);
 	else if (cmp->flag & u_integer)
-		cmp->_int = va_arg(arg_ptr, unsigned int);
+		cmp->_uint = va_arg(arg_ptr, unsigned int);
 	else if (cmp->flag & percent)
 		cmp->str = "%";
 }
@@ -199,7 +206,7 @@ void	initialize_usage(t_fp function[])
 {
 	int index;
 
-	index = 8;
+	index = 9;
 	while (index--)
 		function[index].usage = NOT_USED;
 }
@@ -224,6 +231,8 @@ void	set_function_usage(int flag, t_fp function[])
 		}
 		if (flag & string)
 			function[ZERO].usage = NOT_USED;
+		//if (flag & character)
+		//	function[CHAR].usage = USED;
 }
 
 void	set_function_number(t_fp funtion[])
@@ -236,14 +245,16 @@ void	set_function_number(t_fp funtion[])
 	funtion[SHARPLOW].print = print_prefix_sharp_low;
 	funtion[ZERO].print_l = print_padding_by_length;
 	funtion[POINTER].print_l = print_prefix_pointer;
+	funtion[CHAR].print_l = print_character;
 }
 
 void	set_priority(t_fp function[], int flag)
 {
 	int priority;
 	
-	priority = 5;
+	priority = 6;
 	function[ARGUMENT].priority = priority;
+	function[CHAR].priority = priority;
 	if (flag & minus)
 	{
 		priority = function[ARGUMENT].priority + 1;
@@ -254,7 +265,7 @@ void	set_priority(t_fp function[], int flag)
 		priority = function[SPACE].priority + 1;
 		function[ZERO].priority = priority;
 	}
-	if (flag & (pointer || sharp))
+	if ((flag & pointer) || (flag & sharp))
 	{
 		priority = function[ARGUMENT].priority + 1;
 		function[POINTER].priority = priority;
@@ -275,7 +286,7 @@ void	insert_to_heap(t_fp function[], Heap *H)
 {
 	int	index;
 
-	index = 8;
+	index = 9;
 	while (index--)
 	{
 		if (function[index].usage == USED)
@@ -291,17 +302,27 @@ void	print_by_priority(Heap *H, t_component cmp)
 	{
 		HEAP_DeleteMin(H, &func);
 		if (func.fp.print_l)
-			func.fp.print_l(2);
+		{
+			if (cmp.flag & character)
+			{
+				printf("%c\n", cmp._int);
+				func.fp.print_l(cmp._int);
+			}
+			else
+				func.fp.print_l(2);
+		}
 		if (func.fp.print)
 			func.fp.print();
 		if (func.fp.print_untyped)
-			func.fp.print_untyped(cmp.str, cmp.width_total);
+			func.fp.print_untyped(cmp.str, ft_strlen(cmp.str));
 	}
 }
 
 void	init(t_component *cmp)
 {
 	cmp->_int = 0;
+	cmp->_uint = 0;
+	cmp->_pointer = 0;
 	cmp->flag = 0;
 	cmp->str = 0;
 	cmp->width_flag = 0;
@@ -325,13 +346,15 @@ int	ft_printf(const char *fmt, ...)
 	//int	total printed length;
 	//int each printed length;
 	int	ret;
+
+	ret = 0;
 	t_component cmp;
-	t_fp fp[8];
+	t_fp fp[9];
 	Heap *H;
 	va_list arg_ptr;
 	va_start(arg_ptr, fmt);
 
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < 9; i++)
 				init_function(&fp[i]);
 	set_function_number(fp);
 	init(&cmp);
@@ -342,7 +365,7 @@ int	ft_printf(const char *fmt, ...)
 		if (*fmt == '%')
 		{
 
-			H = HEAP_Create(8);
+			H = HEAP_Create(9);
 			move_fmt_by_length(&fmt, 1);
 			set_minimum_field_width(&fmt, &cmp);
 			initialize_usage(fp);
@@ -357,7 +380,7 @@ int	ft_printf(const char *fmt, ...)
 			//continue;
 			HEAP_Destroy(H);
 			init(&cmp);
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < 9; i++)
 				init_function(&fp[i]);
 		}
 		ret += print_untyped_character(fmt, ret);
