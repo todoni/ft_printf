@@ -181,9 +181,9 @@ void	get_argument_value(va_list arg_ptr, t_component *cmp)
 	else if (cmp->flag & string)
 		cmp->str = va_arg(arg_ptr, char*);
 	else if (cmp->flag & pointer)
-		cmp->_pointer = va_arg(arg_ptr, unsigned long long);
+		cmp->_int = va_arg(arg_ptr, unsigned long long);
 	else if (cmp->flag & u_integer)
-		cmp->_uint = va_arg(arg_ptr, unsigned int);
+		cmp->_int = va_arg(arg_ptr, unsigned int);
 	else if (cmp->flag & percent)
 		cmp->str = "%";
 }
@@ -231,9 +231,13 @@ void	set_function_usage(int flag, t_fp function[])
 		}
 		if (flag & string)
 			function[ZERO].usage = NOT_USED;
-		//if (flag & character)
-		//	function[CHAR].usage = USED;
+		if (flag & character)
+		{
+			function[CHAR].usage = USED;
+			function[ARGUMENT].usage = NOT_USED;
+		}
 }
+
 
 void	set_function_number(t_fp funtion[])
 {
@@ -248,11 +252,30 @@ void	set_function_number(t_fp funtion[])
 	funtion[CHAR].print_l = print_character;
 }
 
+int	get_used_number(t_fp function[])
+{
+	int index;
+	int	num;
+
+	index = 9;
+	num = 0;
+	while (index--)
+	{
+		if (function[index].usage == USED)
+			num++;
+	}
+	return (num);
+}
+
 void	set_priority(t_fp function[], int flag)
 {
 	int priority;
 	
-	priority = 6;
+	priority = get_used_number(function);
+	int c = priority + 48;
+	write(1, "used function: ", 15);
+	write(1, &c, 1);
+	write(1, "\n", 1);
 	function[ARGUMENT].priority = priority;
 	function[CHAR].priority = priority;
 	if (flag & minus)
@@ -290,32 +313,40 @@ void	insert_to_heap(t_fp function[], Heap *H)
 	while (index--)
 	{
 		if (function[index].usage == USED)
-			HEAP_Insert(H, function[index], function[index].priority);
+			Insert(H, function[index]);
 	}
 }
-
-void	print_by_priority(Heap *H, t_component cmp)
+#include <stdio.h>
+void	print_by_priority(Heap *H, t_component *cmp)
 {
-	HeapNode func;
-
-	while (H->UsedSize)
+	t_fp *fp;
+	char c;
+	while (H->size)
 	{
-		HEAP_DeleteMin(H, &func);
-		if (func.fp.print_l)
+		fp = Delete(H);
+		write(1, "priority : ", 11);
+		c = fp->priority + 48;
+		write(1, &c, 1);
+		write(1, " ", 1);
+		if (fp->print_l)
 		{
-			if (cmp.flag & character)
+			if (cmp->flag & character)
 			{
-				printf("%c\n", cmp._int);
-				func.fp.print_l(cmp._int);
+				fp->print_l(cmp->_int);
+				cmp->flag ^= character;
 			}
 			else
-				func.fp.print_l(2);
+			{
+				fp->print_l(2);
+			}
 		}
-		if (func.fp.print)
-			func.fp.print();
-		if (func.fp.print_untyped)
-			func.fp.print_untyped(cmp.str, ft_strlen(cmp.str));
+		else if (fp->print)
+			fp->print();
+		else if (fp->print_untyped)
+			fp->print_untyped(cmp->str, ft_strlen(cmp->str));
+		write(1, " ", 1);
 	}
+	write(1, "\n", 1);
 }
 
 void	init(t_component *cmp)
@@ -350,7 +381,7 @@ int	ft_printf(const char *fmt, ...)
 	ret = 0;
 	t_component cmp;
 	t_fp fp[9];
-	Heap *H;
+	Heap H;
 	va_list arg_ptr;
 	va_start(arg_ptr, fmt);
 
@@ -365,20 +396,19 @@ int	ft_printf(const char *fmt, ...)
 		if (*fmt == '%')
 		{
 
-			H = HEAP_Create(9);
+			initializeHeap(&H);
 			move_fmt_by_length(&fmt, 1);
 			set_minimum_field_width(&fmt, &cmp);
 			initialize_usage(fp);
 			set_function_usage(cmp.flag, fp);
 			set_priority(fp, cmp.flag);
-			insert_to_heap(fp, H);
+			insert_to_heap(fp, &H);
 			get_argument_value(arg_ptr, &cmp);
 			integer_to_string(&cmp);
 			set_print_length(&cmp);
-			print_by_priority(H, cmp);
+			print_by_priority(&H, &cmp);
 			//total printed length += each printed length;
 			//continue;
-			HEAP_Destroy(H);
 			init(&cmp);
 			for (int i = 0; i < 9; i++)
 				init_function(&fp[i]);

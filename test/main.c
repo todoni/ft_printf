@@ -19,9 +19,9 @@ int	main()
 	result[10] = ft_printf("%10c\n", 'a');
 	result[11] = ft_printf("%-10c\n", 'a');
 	result[12] = ft_printf("my  :%11p\n", "123");
-	printf("lib :%11p\n", "123");
+	//printf("lib :%11p\n", "123");
 	result[13] = ft_printf("my  :%-11p\n", "123");
-	printf("lib :%-11p\n", "123");
+	//printf("lib :%-11p\n", "123");
 	result[14] = ft_printf("%c\n", 'a');
 	result[15] = ft_printf("%-c\n", 'a');
 	result[14] = ft_printf("%s\n", "asdf");
@@ -48,7 +48,7 @@ int	main()
 	result[35] = ft_printf("% -010d\n", 42);
 	result[36] = ft_printf("%- 010d\n", 42);
 	result[37] = ft_printf("%-5%\n");
-	result[37] = printf("%-5%\n");
+	//result[37] = printf("%-5%\n");
 	result[38] = ft_printf("%-.0d\n", 42);
 	result[39] = ft_printf("\n\n\n\n");
 	result[40] = ft_printf("%+5.7d %0.0x %10s\n", 42, 42, "42");

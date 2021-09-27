@@ -1,120 +1,74 @@
-#include "heap.h"
 #include "psuedo_printf.h"
+#include "heap.h"
 
-Heap	*HEAP_Create( int InitialSize ) {
-	Heap	*NewHeap = (Heap*) malloc( sizeof( Heap ) );
-	NewHeap->Capacity = InitialSize;
-	NewHeap->UsedSize = 0;
-	NewHeap->Nodes = (HeapNode*) malloc( sizeof( HeapNode ) * NewHeap->Capacity );
-	return NewHeap;
-}
-
-void	HEAP_Destroy( Heap *H ) {
-	free( H->Nodes );
-	free( H );
-}
-
-void	HEAP_Insert( Heap *H, t_fp fp, ElementType NewData)
+void    Swap(t_fp *p, t_fp *c)
 {
-	
-	int	CurrentPosition = H->UsedSize;
-	int	ParentPosition = HEAP_GetParent( CurrentPosition );
+    t_fp tmp;
 
-	if (H->UsedSize == H->Capacity) {
-		H->Capacity *= 2;
-		H->Nodes = (HeapNode*) realloc( H->Nodes, sizeof( HeapNode ) * H->Capacity );
-	}
-	H->Nodes[CurrentPosition].Data = NewData;
-	H->Nodes[CurrentPosition].fp = fp;
-	
-	while ( CurrentPosition > 0 && H->Nodes[CurrentPosition].Data < H->Nodes[ParentPosition].Data ) {
-		HEAP_SwapNodes( H, CurrentPosition, ParentPosition );
-
-		CurrentPosition = ParentPosition;
-		ParentPosition = HEAP_GetParent( CurrentPosition );
-	}
-
-	H->UsedSize++;
+    tmp = *p;
+    *p = *c;
+    *c = tmp;
 }
 
-HeapNode *HEAP_vertex(Heap *H)
+void    initializeHeap(Heap *heap)
 {
-    return &H->Nodes[0]; 
-}
-
-void	HEAP_DeleteMin( Heap *H, HeapNode *Root ) {
-	int	ParentPosition = 0;
-	int	LeftPosition   = 0;
-	int	RightPosition  = 0;
-
-	/* save min in Root */
-	memcpy(Root, &H->Nodes[0], sizeof(HeapNode));
-	memset(&H->Nodes[0], 0, sizeof(HeapNode));
-
-	H->UsedSize--;
-	/* copy last node's data to first node */
-	HEAP_SwapNodes( H, 0, H->UsedSize );
-
-	LeftPosition  = HEAP_GetLeftChild( 0 );
-	RightPosition = LeftPosition + 1;
-
-	while (1) {
-		int	SelectedChild = 0;
-
-		if ( LeftPosition >= H->UsedSize )
-			break ;
-
-		if ( RightPosition >= H->UsedSize )
-			SelectedChild = LeftPosition;
-		else {
-			if ( H->Nodes[LeftPosition].Data > H->Nodes[RightPosition].Data )
-				SelectedChild = RightPosition;
-			else
-				SelectedChild = LeftPosition;
-		}
-
-		if ( H->Nodes[SelectedChild].Data < H->Nodes[ParentPosition].Data ) {
-			HEAP_SwapNodes(H, ParentPosition, SelectedChild);
-			ParentPosition = SelectedChild;
-		}
-		else
-			break ;
-
-		LeftPosition  = HEAP_GetLeftChild(ParentPosition);
-		RightPosition = LeftPosition + 1;
+    for (int i = 0; i < MAX_SIZE; i++)
+	{
+		heap->function[i].print = 0;
+		heap->function[i].print_l = 0;
+		heap->function[i].print_untyped = 0;
+		heap->function[i].priority = 0;
 	}
-
-	if ( H->UsedSize < ( H->Capacity / 2 ) ) {
-		H->Capacity /= 2;
-		H->Nodes = (HeapNode*) realloc( H->Nodes, sizeof( HeapNode ) * H->Capacity );
-	}
+	heap->size = 0;
 }
 
-int		HEAP_GetParent( int Index ) {
-	return (int)((Index - 1) / 2);
+void    Insert(Heap *heap, t_fp function)
+{
+    int index;
+
+    heap->size += 1;
+    index = heap->size;
+    while (index != 1 && function.priority < heap->function[index / 2].priority)
+    {
+        heap->function[index] = heap->function[index / 2];
+        index /= 2;
+    }
+    heap->function[index] = function;
 }
 
-int		HEAP_GetLeftChild( int Index ) {
-	return ((2 * Index) + 1);
+t_fp	*makeRoot()
+{
+	t_fp *root;
+
+	root = (t_fp *)malloc(sizeof(t_fp));
+	if (root == 0)
+		return (0);
+	return (root);
 }
 
-void	HEAP_SwapNodes( Heap *H, int Index1, int Index2 ) {
-	int CopySize = sizeof( HeapNode );
-	HeapNode	*Temp = (HeapNode*) malloc( CopySize );
+t_fp    *Delete(Heap *heap)
+{
+    t_fp *root;
+    int parent;
+    int child;
 
-	memcpy(Temp, 			  &H->Nodes[Index1], CopySize);
-	memcpy(&H->Nodes[Index1], &H->Nodes[Index2], CopySize);
-	memcpy(&H->Nodes[Index2], Temp,				 CopySize);
-
-	free(Temp);
-}
-
-void	HEAP_PrintNodes( Heap *H ) {
-	if (!H->UsedSize)
-		return ;
-	int	i;
-	for (i = 0; i < H->UsedSize; i++) {
-        printf("%d\n", H->Nodes[i].Data);
-	}
-	printf("\n");
+	root = 0;
+    parent = 1;
+    if (heap->size == 0)
+        return (root);
+	root = makeRoot();
+    *root = heap->function[1];
+    heap->function[1] = heap->function[heap->size--];
+    while (1)
+    {
+        child = parent * 2;
+        if ((child + 1 <= heap->size) && (heap->function[child].priority > heap->function[child + 1].priority))
+            child++;
+        if ((child > heap->size) || (heap->function[child].priority > heap->function[parent].priority))
+            break;
+        Swap(&heap->function[parent], &heap->function[child]);
+        parent = child;
+    }
+    heap->function[heap->size + 1].priority = 0;
+    return(root);
 }
