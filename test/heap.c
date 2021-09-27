@@ -1,4 +1,4 @@
-#include "psuedo_printf.h"
+#include "ft_printf.h"
 #include "heap.h"
 
 void    Swap(t_fp *p, t_fp *c)
@@ -15,8 +15,9 @@ void    initializeHeap(Heap *heap)
     for (int i = 0; i < MAX_SIZE; i++)
 	{
 		heap->function[i].print = 0;
-		heap->function[i].print_l = 0;
-		heap->function[i].print_untyped = 0;
+		heap->function[i].print_space = 0;
+		heap->function[i].print_padding = 0;
+		heap->function[i].print_string = 0;
 		heap->function[i].priority = 0;
 	}
 	heap->size = 0;

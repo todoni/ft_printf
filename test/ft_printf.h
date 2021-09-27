@@ -9,8 +9,8 @@
 /*   Updated: 2021/07/02 13:40:42 by sohan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef	PSUEDO_PRINTF_H
-# define	PSUEDO_PRINTF_H
+#ifndef	FT_PRINTF_H
+# define	FT_PRINTF_H
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -18,7 +18,7 @@
 
 # define NOT_USED -1
 # define USED 1
-# define FIRST 0
+# define FIRST -1
 
 enum	e_mask
 {
@@ -38,7 +38,8 @@ enum	e_mask
 	percent = 1 << 0,
 	int_mask = 0b00000010011110,
 	int_base_mask = 0b00000000011000,
-	x_base_mask = 0b00000000100110,
+	x_base_mask = 0b00000000100100,
+	malloc_free = 0b00000000111110,
 	pointer_len_fixed = 11
 };
 
@@ -52,7 +53,8 @@ enum	e_funtions
 	SHARPLOW,
 	ZERO,
 	POINTER,
-	CHAR
+	CHAR,
+	PRECISION
 };
 
 typedef	struct	s_component
@@ -62,6 +64,7 @@ typedef	struct	s_component
 	int		width_padding;
 	int		width_precision;
 	int		width_flag;
+	int		width_str;
 	char	*str;
 	int		_int;
 	int		_uint;
@@ -71,9 +74,13 @@ typedef	struct	s_component
 
 typedef struct	s_functions
 {
-	void	(*print_l)(int length);
-	void	(*print)();
-	void		(*print_untyped)(char *fmt, int ret);
+	void	(*print_space)(int length, int *ret);
+	void	(*print_padding)(int length, int *ret);
+	void	(*print_precision)(int length, int *ret);
+	void	(*print)(int *ret);
+	void	(*print_string)(char *fmt, int length, int *ret);
+	void	(*print_char)(int c, int *ret);
+	void	(*print_sign)(int sign, int *ret);
 	int		usage;
 	int		priority;
 }				t_fp;
@@ -94,6 +101,7 @@ int	ft_isdigit(char c);
 int	ft_atoi(const char *str);
 int	ft_strlen(char *str);
 int	ft_printf(const char *fmt, ...);
+int	ft_vprintf(const char *fmt, va_list arg_ptr, int ret);
 char *ft_itoa(int num, char *base);
 void	*ft_memset(void *b, int c, size_t len);
 void	*ft_calloc(size_t count, size_t size);

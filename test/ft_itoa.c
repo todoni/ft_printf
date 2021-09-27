@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "psuedo_printf.h"
+#include "ft_printf.h"
 
 static int	find_digit(int n, int base)
 {

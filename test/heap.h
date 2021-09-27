@@ -1,9 +1,9 @@
-#include "psuedo_printf.h"
-#define MAX_SIZE 100
+#include "ft_printf.h"
+#define MAX_SIZE 10
 
 typedef struct heap
 {
-    t_fp function[MAX_SIZE];
+    t_fp function[MAX_SIZE + 1];
     int size;
 }   Heap;
 

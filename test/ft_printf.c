@@ -1,4 +1,4 @@
-#include "psuedo_printf.h"
+#include "ft_printf.h"
 #include "heap.h"
 
 int	print_untyped_character(const char *fmt, int ret)
@@ -222,7 +222,7 @@ void	integer_to_string(t_component *cmp)
 		base = "0123456789abcdef";
 	else if (cmp->flag & hex_up)
 		base = "0123456789ABCDEF";
-	if (!cmp->str)
+	if (!cmp->str && !(cmp->flag & character))
 		cmp->str = ft_itoa(cmp->_int, base);
 }
 
@@ -230,7 +230,7 @@ void	initialize_usage(t_fp function[])
 {
 	int index;
 
-	index = 9;
+	index = MAX_SIZE;
 	while (index--)
 		function[index].usage = NOT_USED;
 }
@@ -391,6 +391,7 @@ void	print_by_priority(Heap *H, t_component *cmp, int *ret)
 			fp->print_char(cmp->_int, ret);
 		else if (fp->print_sign)
 			fp->print_sign(cmp->_int, ret);
+		free(fp);
 	}
 }
 
@@ -449,7 +450,11 @@ int	ft_printf(const char *fmt, ...)
 			integer_to_string(&cmp);
 			set_print_length(&cmp);
 			print_by_priority(&H, &cmp, &ret);
+			if (cmp.flag & malloc_free)
+				free(cmp.str);
 		}
+		if (*fmt == '\0')
+			break;
 		ret = print_untyped_character(fmt, ret);
 		move_fmt_by_length(&fmt, 1);
 	}
